@@ -8,8 +8,9 @@ app.use(helmet());
 app.use(cookieParser());
 
 //require('./db')();
+const PORT = process.env.PORT || 3000;
 
-const server = app.listen(3000, () => {
+const server = app.listen(PORT, () => {
     console.log('Server running at localhost:3000')
 });
 module.exports = server;

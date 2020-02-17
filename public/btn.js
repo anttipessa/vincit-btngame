@@ -1,4 +1,5 @@
-const socket = io.connect('http://localhost:3000/')
+const PORT = process.env.PORT || 3000;
+const socket = io.connect(PORT)
 
 const btn = document.getElementById('btn')
 const points = document.getElementById('points');
