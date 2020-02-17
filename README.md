@@ -16,6 +16,12 @@ Backend is Node and Express, client communicates with the server using Socket.Io
 
 App is live at https://vincit-btn-game.herokuapp.com/
 
+## Todo
+
+- Frontend with React
+- mongoDB for the counter
+- code refactoring
+
 ## Install
 
 1. Download Node https://nodejs.org/en/ 
