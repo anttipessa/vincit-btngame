@@ -1,4 +1,4 @@
-const PORT = process.env.PORT || 3000;
+const PORT = "https://vincit-btn-game.herokuapp.com/" || 'http://localhost:3000/';
 const socket = io.connect(PORT)
 
 const btn = document.getElementById('btn')
