@@ -26,14 +26,13 @@ io.on('connection', (socket) => {
     console.log('made connection', socket.id)
     socket.on('press', (data) => {
         counter = counter + 1;
+        console.log(counter)
          if (counter % 10==0) {
            let num = 5
            socket.emit('small', num)
+         }else{
+             socket.emit('no win')
          }
-         else if (data.score == 0){
-             socket.emit('restart')
-         }
- 
 
     })
 })

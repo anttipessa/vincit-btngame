@@ -4,7 +4,7 @@ const btn = document.getElementById('btn')
 const points = document.getElementById('points');
 const info = document.getElementById('info');
 const button = document.createElement("input");
-let score = 20;
+let score;
 
 function restart() {
     btn.style.display = "none";
@@ -29,19 +29,18 @@ function refreshpoints() {
 btn.addEventListener('click', () => {
     info.innerHTML = '';
     score = score - 1;
-    setCookie("player", score, 3)
-    refreshpoints()
     socket.emit('press', {
         score
     });
 })
 
-// socket.on('points', function (data) {
-//     points.innerHTML = '';
-//     info.innerHTML = '';
-//     points.innerHTML += '<p><strong>' + data + '</strong></p>';
-
-// });
+ socket.on('no win', function () {
+    setCookie("player", score, 3)
+    refreshpoints()
+     if(score==0){
+         restart()
+     }
+ });
 
 socket.on('small', function (data) {
     score = score + data;
@@ -51,11 +50,6 @@ socket.on('small', function (data) {
     refreshpoints()
 });
 
-socket.on('restart', function () {
-    restart()
-
-});
-
 function setCookie(cname, cvalue, exdays) {
     let d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -63,11 +57,19 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-function getCookieValue() {
-    var b = document.cookie.match('(^|[^;]+)\\s*' + "player" + '\\s*=\\s*([^;]+)');
-    value = b ? b.pop() : '';
-    points.innerHTML += '<p><strong>' + value + '</strong></p>'
+function getCookie(name) {
+    let v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return v ? v[2] : null;
 }
 
+function getScore(){
+    let cookie=getCookie("player")
+    if( cookie === null){
+        score = 20;
+    }else{
+        score=cookie;
+    }
+    points.innerHTML += '<p><strong>' + score + '</strong></p>'
+}
 
 
