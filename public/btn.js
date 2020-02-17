@@ -4,9 +4,11 @@ const btn = document.getElementById('btn')
 const points = document.getElementById('points');
 const info = document.getElementById('info');
 const button = document.createElement("input");
+
 let score;
 
 function restart() {
+    info.innerHTML = '';
     btn.style.display = "none";
     button.type = "button";
     button.value = "Restart Game?"
@@ -34,9 +36,11 @@ btn.addEventListener('click', () => {
     });
 })
 
- socket.on('no win', function () {
+ socket.on('no win', function (data) {
     setCookie("player", score, 3)
     refreshpoints()
+    console.log(data)
+    info.innerHTML += '<p><strong> Next prize in '+Math.abs(data)+' clicks.</strong></p>';
      if(score==0){
          restart()
      }
@@ -46,9 +50,27 @@ socket.on('small', function (data) {
     score = score + data;
     setCookie("player", score, 3)
     info.innerHTML = '';
-    info.innerHTML += '<p><strong> You win 5 points</strong></p>';
+    info.innerHTML += '<p><strong> You win 5 points!</strong></p>';
     refreshpoints()
 });
+
+socket.on('medium', function (data) {
+    score = score + data;
+    setCookie("player", score, 3)
+    info.innerHTML = '';
+    info.innerHTML += '<p><strong> You win 40 points!</strong></p>';
+    refreshpoints()
+});
+
+
+socket.on('big', function (data) {
+    score = score + data;
+    setCookie("player", score, 3)
+    info.innerHTML = '';
+    info.innerHTML += '<p><strong> You win 250 points!</strong></p>';
+    refreshpoints()
+});
+
 
 function setCookie(cname, cvalue, exdays) {
     let d = new Date();
@@ -68,6 +90,9 @@ function getScore(){
         score = 20;
     }else{
         score=cookie;
+        if(score == 0){
+            restart()
+        }
     }
     points.innerHTML += '<p><strong>' + score + '</strong></p>'
 }
