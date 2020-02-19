@@ -2,22 +2,19 @@ const express = require('express');
 const socket = require('socket.io');
 const helmet = require("helmet");
 const cookieParser = require('cookie-parser')
+const debug = require('debug')('btn:app');
 
 const app = express();
 app.use(helmet());
 app.use(cookieParser());
+app.use(express.static('public'))
 
-//require('./db')();
 const PORT = process.env.PORT || 3000;
 
 const server = app.listen(PORT, () => {
     console.log('Server running at localhost:3000')
 });
 module.exports = server;
-
-app.use(express.static('public'))
-
-
 
 const io = socket(server)
 
