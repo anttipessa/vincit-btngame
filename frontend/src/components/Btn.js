@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import io from 'socket.io-client';
 import './Btn.css';
 
-const ENDPOINT = 'localhost:3000' || 'https://vincit-btn-game.herokuapp.com/'
+const ENDPOINT = '/'
 let socket = io(ENDPOINT);
 
 const Btn = () => {
