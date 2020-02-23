@@ -35,6 +35,7 @@ io.on('connection', (socket) => {
             nextwin = counter % 10 - 10;
             socket.emit('no win', nextwin);
         }
+        console.log(counter)
     })
 })
 
