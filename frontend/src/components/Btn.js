@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import io from 'socket.io-client';
-const ENDPOINT = 'localhost:3000'
+import './Btn.css';
+
+const ENDPOINT = 'localhost:3000' || 'https://vincit-btn-game.herokuapp.com/'
 let socket = io(ENDPOINT);
 
 const Btn = () => {
@@ -14,12 +16,12 @@ const Btn = () => {
         if (click) {
             socket.emit('press', {
             });
+            socket.on('no win', function (data) {
+                setInfo(<p><strong> Next prize in {Math.abs(data)} clicks.</strong></p>)
+            });
             socket.on('small', function (data) {
                 setCount(count + data)
                 setInfo(<p><strong> You win 5 points!</strong></p>)
-            });
-            socket.on('no win', function (data) {
-                setInfo(<p><strong> Next prize in {Math.abs(data)} clicks.</strong></p>)
             });
             socket.on('medium', function (data) {
                 setCount(count + data)
@@ -29,9 +31,12 @@ const Btn = () => {
                 setCount(count + data)
                 setInfo(<p><strong> You win 250 points!</strong></p>)
             });
-            localStorage.setItem("score", count)
-        }
+        }// eslint-disable-next-line
     }, [click]);
+
+    useEffect(() => {
+        localStorage.setItem("score", count)
+    }, [count]);
 
     function clickEvent() {
         setCount(count - 1)
@@ -41,18 +46,15 @@ const Btn = () => {
     if (count <= 0) {
         return (
             <div>
-                <Button size="large" variant="contained" color="secondary" disabled onClick={() => clickEvent()}>Click Me</Button>
-                <br></br>
-                <Button size="large" variant="contained" color="primary" onClick={() => setCount(20)}>Try again?</Button>
-                <div>{info}</div>
+                <Button size="large" variant="contained" color="primary" id="click" onClick={() => setCount(20)}>Try again?</Button>
+                <div id="info">{info}</div>
             </div>)
-
     } else {
         return (
             <div>
-                <div>{count}</div>
-                <Button size="large" variant="contained" color="secondary" onClick={() => clickEvent()}>Click</Button>
-                <div>{info}</div>
+                <div id="points">{count}</div>
+                <Button size="large" variant="contained" color="secondary" id="click" onClick={() => clickEvent()}>Click</Button>
+                <div id="info">{info}</div>
             </div>
         )
     }

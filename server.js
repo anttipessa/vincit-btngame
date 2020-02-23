@@ -3,18 +3,27 @@ const socket = require('socket.io');
 const helmet = require("helmet");
 const cookieParser = require('cookie-parser')
 const debug = require('debug')('btn:app');
+const path = require('path');
 
 const app = express();
 app.use(helmet());
 app.use(cookieParser());
-app.use(express.static('public'))
 
 const PORT = process.env.PORT || 3000;
 
 const server = app.listen(PORT, () => {
     console.log('Server running at localhost:3000')
 });
+
 module.exports = server;
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('/frontend/build'));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+}
 
 const io = socket(server)
 
