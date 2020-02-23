@@ -12,13 +12,12 @@ The player wins:
 
 ## Implementation
 
-Backend is Node and Express, client communicates with the server using Socket.Io. Frontend is vanillaJS.
+Backend is Node and Express, client communicates with the server using Socket.Io. Frontend is React. Player score is saved in LocalStorage.
 
-App is live at https://vincit-btn-game.herokuapp.com/
+App is live at https://vincit-btngame.herokuapp.com/
 
 ## Todo
 
-- Frontend with React
 - mongoDB for the counter
 - code refactoring
 
