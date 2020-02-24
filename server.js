@@ -1,13 +1,12 @@
 const express = require('express');
 const socket = require('socket.io');
 const helmet = require("helmet");
-const cookieParser = require('cookie-parser')
-const debug = require('debug')('btn:app');
+const mongoose = require('mongoose');
 const path = require('path');
+const Score = require('./models/scoreModel');
 
 const app = express();
 app.use(helmet());
-app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000;
 
@@ -15,7 +14,14 @@ const server = app.listen(PORT, () => {
     console.log('Server running at localhost:3000')
 });
 
-module.exports = server;
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/btn_game', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+mongoose.connection.on('connected', () => {
+    console.log('Connected to MongoDB');
+});
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('frontend/build'));
@@ -27,13 +33,17 @@ if (process.env.NODE_ENV === 'production') {
 
 const io = socket(server)
 
-let counter = 0;
-let nextwin;
-
 io.on('connection', (socket) => {
     console.log('made connection', socket.id)
-    socket.on('press', (data) => {
-        counter = counter + 1;
+    socket.on('press', async () => {
+        
+        // DB config
+        const id = '5e53c920dccf4320ec853dc0'
+        const score = await Score.findById(id)
+        const counter = score.points + 1
+        let nextwin;
+
+        // Check for winner and emit it to client
         if (counter % 500 == 0) {
             socket.emit('big', 250)
         } else if (counter % 100 == 0) {
@@ -44,7 +54,10 @@ io.on('connection', (socket) => {
             nextwin = counter % 10 - 10;
             socket.emit('no win', nextwin);
         }
-        console.log(counter)
+
+        // Update score to DB
+        const update = await Score.findByIdAndUpdate(id, {points : counter})
+        await update.save()
     })
 })
 
