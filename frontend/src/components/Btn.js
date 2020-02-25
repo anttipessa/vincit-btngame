@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import io from 'socket.io-client';
 import './Btn.css';
 
-const ENDPOINT = '/'
+const ENDPOINT = '/' // change this to localhost:3000 to run locally
 let socket = io(ENDPOINT);
 
 const Btn = () => {

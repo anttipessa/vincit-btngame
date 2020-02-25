@@ -16,7 +16,8 @@ const server = app.listen(PORT, () => {
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/btn_game', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false 
 });
 
 mongoose.connection.on('connected', () => {
@@ -34,16 +35,17 @@ if (process.env.NODE_ENV === 'production') {
 const io = socket(server)
 
 io.on('connection', (socket) => {
-    console.log('made connection', socket.id)
     socket.on('press', async () => {
-        
-        // DB config
+
+        // DB config & DB update
         const id = '5e53c920dccf4320ec853dc0'
         const score = await Score.findById(id)
         const counter = score.points + 1
-        let nextwin;
-
+        const update = await Score.findByIdAndUpdate(id, { points: counter })
+        await update.save()
+        
         // Check for winner and emit it to client
+
         if (counter % 500 == 0) {
             socket.emit('big', 250)
         } else if (counter % 100 == 0) {
@@ -54,10 +56,6 @@ io.on('connection', (socket) => {
             nextwin = counter % 10 - 10;
             socket.emit('no win', nextwin);
         }
-
-        // Update score to DB
-        const update = await Score.findByIdAndUpdate(id, {points : counter})
-        await update.save()
     })
 })
 
