@@ -17,7 +17,7 @@ const server = app.listen(PORT, () => {
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/btn_game', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false 
+    useFindAndModify: false
 });
 
 mongoose.connection.on('connected', () => {
@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
         const counter = score.points + 1
         const update = await Score.findByIdAndUpdate(id, { points: counter })
         await update.save()
-        
+
         // Check for winner and emit it to client
 
         if (counter % 500 == 0) {
