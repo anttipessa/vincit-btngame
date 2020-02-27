@@ -37,7 +37,7 @@ npm install
 - In the Btn.js file in \frontend\src\components change ENDPOINT variable to 'localhost:3000'
 
 6. Run the app
-- Start server from the root dir with ` node app `
+- Start server from the root dir with ` node server `
 - Start client from frontend dir with ` npm start `
 - App is now running at http://localhost:3001/
 
